@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Chess.Domain.Models;
+using Chess.Domain.Models.Pieces;
 
 namespace Chess.Domain
 {
@@ -37,8 +40,18 @@ namespace Chess.Domain
             _gameState.BlackPieces = moveServiceResult.BlackPieces;
             _gameState.WhitePieces = moveServiceResult.WhitePieces;
 
-            // Update valid moves
+            var validMoves = new Dictionary<Piece, List<Position>>();
+            var piecesToProcess = _gameState.Turn == Colour.White ? _gameState.WhitePieces : _gameState.BlackPieces;
+            foreach (var piece in piecesToProcess)
+            {
+                var moves = piece.GetMoves(_gameState.Pieces);
+                if (moves.Any())
+                {
+                    validMoves.Add(piece, moves);
+                }
+            }
 
+            _gameState.ValidMoves = validMoves;
             return _gameState;
         }
     }

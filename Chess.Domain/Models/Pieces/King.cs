@@ -11,7 +11,7 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-king.png";
         }
 
-        public override List<Position> GetMoves(IReadOnlyDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
         {
             var moveList = new List<Position>();
             foreach (var delta in Constants.KingDeltas)
@@ -67,7 +67,7 @@ namespace Chess.Domain.Models.Pieces
             };
         }
 
-        private bool CanCastle(IReadOnlyDictionary<Position, Piece> pieces, out CastleDirection castleDirection)
+        private bool CanCastle(IDictionary<Position, Piece> pieces, out CastleDirection castleDirection)
         {
             castleDirection = CastleDirection.None;
             if (NumberMoves > 0)
@@ -123,7 +123,7 @@ namespace Chess.Domain.Models.Pieces
             return true;
         }
 
-        private IEnumerable<Rook> FetchValidCastlingRooks(IReadOnlyDictionary<Position, Piece> pieces, IEnumerable<Position> startingRookPositions)
+        private IEnumerable<Rook> FetchValidCastlingRooks(IDictionary<Position, Piece> pieces, IEnumerable<Position> startingRookPositions)
         {
             var validRookList = new List<Rook>();
             foreach (var position in startingRookPositions)

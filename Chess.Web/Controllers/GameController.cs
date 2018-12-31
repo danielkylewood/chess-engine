@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Chess.Domain;
 using Chess.Domain.Models;
-using Chess.Domain.Models.Pieces;
 using Chess.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,10 +25,6 @@ namespace Chess.Web.Controllers
         public IActionResult CreateGame()
         {
             var gameState = _gameService.CreateGame(Guid.NewGuid());
-
-            var piece = gameState.WhitePieces.First(x => x is Queen);
-            gameState.ValidMoves.Add(piece, new List<Position> {new Position(4, 4)});
-
             var gameStateViewModel = GameStateViewModel.FromGameState(gameState);
             return View("Board", gameStateViewModel);
         }

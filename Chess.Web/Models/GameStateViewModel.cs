@@ -9,7 +9,7 @@ namespace Chess.Web.Models
     {
         public Colour CurrentPlayer { get; set; }
         public Dictionary<string, Piece> Pieces { get; set; }
-        public Dictionary<Piece, List<string>> ValidMoves { get; set; }
+        public Dictionary<string, List<string>> ValidMoves { get; set; }
 
         public static GameStateViewModel FromGameState(GameState gameState)
         {
@@ -17,7 +17,7 @@ namespace Chess.Web.Models
             {
                 CurrentPlayer = gameState.CurrentPlayer,
                 Pieces = gameState.Pieces.ToDictionary(pair => pair.Key.ToString(), pair => pair.Value),
-                ValidMoves = gameState.ValidMoves.ToDictionary(pair => pair.Key, pair => pair.Value.Select(x => x.ToString()).ToList())
+                ValidMoves = gameState.ValidMoves.ToDictionary(pair => pair.Key.Position.ToString(), pair => pair.Value.Select(x => x.ToString()).ToList())
             };
             return gameViewModel;
         }

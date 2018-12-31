@@ -33,8 +33,24 @@
 {
     <script src="/lib/jquery-ui/jquery-ui.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            dragAndDropPiece("#main-container", "#piece-01", ["#square-20", "#square-22"]);
+        var movesArray = new Array();
+        debugger;
+        @foreach (var pieceId in Model.ValidMoves.Keys)
+        {
+            @: var squareArray = [];
+            for (var i = 0; i < Model.ValidMoves[pieceId].Count; i++)
+            {
+                @:squareArray.push("#square-" + "@Model.ValidMoves[pieceId][i]");
+            }
+            @:movesArray.push({ pieces: "#piece-" + "@pieceId", moves: squareArray });
+        }
+        
+        $(document).ready(function() {
+            var i;
+            for (i = 0; i < movesArray.count; i++) {
+                dragAndDropPiece("#main-container", movesArray[i].pieces, movesArray[i].moves);
+            }
         });
+
     </script>
 }

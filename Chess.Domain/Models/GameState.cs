@@ -8,6 +8,7 @@ namespace Chess.Domain.Models
     public class GameState
     {
         public int MoveNumber { get; set; }
+        public Colour Turn => MoveNumber % 2 == 0 ? Colour.White : Colour.Black;
 
         public readonly Guid GameId;
         public IDictionary<Position, Piece> Pieces;

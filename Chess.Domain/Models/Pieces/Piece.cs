@@ -30,7 +30,7 @@ namespace Chess.Domain.Models.Pieces
             NumberMoves = 0;
         }
 
-        public abstract List<Position> GetMoves(IReadOnlyDictionary<Position, Piece> pieces);
+        public abstract List<Position> GetMoves(IDictionary<Position, Piece> pieces);
 
         public override bool Equals(object other)
         {

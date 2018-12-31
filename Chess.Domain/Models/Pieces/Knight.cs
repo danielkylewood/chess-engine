@@ -9,7 +9,7 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-knight.png";
         }
 
-        public override List<Position> GetMoves(IReadOnlyDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
         {
             var moveList = new List<Position>();
             foreach (var delta in Constants.KnightDeltas)
