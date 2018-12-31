@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-action="CreateGame" style="padding-top: 15px">
+            <input type="submit" class="btn btn-lg btn-success" value="New Game" />
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form method="get" asp-action="" style="padding-top: 15px">
+            <input type="submit" class="btn btn-lg btn-success" value="Load Game" />
+        </form>
+    </div>
+</div>

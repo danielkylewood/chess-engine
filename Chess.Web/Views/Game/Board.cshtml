@@ -1,0 +1,40 @@
+﻿@using Chess.Domain.Models
+@model Chess.Web.Models.GameStateViewModel
+
+<div class="row" id="main-container">
+    <div class="col-md-6">
+        <div class="board">
+            <div>
+                @for (var i = 7; i >= 0; i--)
+                {
+                    var colourModifier = i % 2;
+                    var squareColourClass = colourModifier == 1 ? "board-square-white" : "board-square-black";
+
+                    for (var j = 0; j <= 7; j++)
+                    {
+                        var position = new Position(i, j);
+                        <div class="board-square @squareColourClass" id="square-@position.ToString()">
+                            @{
+                                if (Model.Pieces.ContainsKey(position.ToString()))
+                                {
+                                    <img src="~/images/@Model.Pieces[position.ToString()].ImageName" alt="" id="piece-@position.ToString()" />
+                                }
+                            }
+                        </div>
+                        squareColourClass = squareColourClass.Equals("board-square-white") ? "board-square-black" : "board-square-white";
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="/lib/jquery-ui/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            dragAndDropPiece("#main-container", "#piece-01", ["#square-20", "#square-22"]);
+        });
+    </script>
+}
