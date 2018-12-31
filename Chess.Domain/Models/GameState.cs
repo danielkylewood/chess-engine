@@ -7,16 +7,19 @@ namespace Chess.Domain.Models
 {
     public class GameState
     {
+        public int MoveNumber { get; set; }
+
         public readonly Guid GameId;
-        public readonly Dictionary<Position, Piece> Pieces;
-        public readonly HashSet<Piece> WhitePieces;
-        public readonly HashSet<Piece> BlackPieces;
-        public readonly Dictionary<Piece, List<Position>> ValidMoves;
+        public IDictionary<Position, Piece> Pieces;
+        public HashSet<Piece> WhitePieces;
+        public HashSet<Piece> BlackPieces;
+        public IDictionary<Piece, List<Position>> ValidMoves;
 
         public Colour CurrentPlayer;
 
         public GameState(Guid gameId)
         {
+            MoveNumber = 0;
             GameId = gameId;
             CurrentPlayer = Colour.White;
             ValidMoves = new Dictionary<Piece, List<Position>>();

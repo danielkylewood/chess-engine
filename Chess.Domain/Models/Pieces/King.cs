@@ -17,7 +17,8 @@ namespace Chess.Domain.Models.Pieces
             foreach (var delta in Constants.KingDeltas)
             {
                 var position = Position.Clone(Position) + delta;
-                if (position.IsValid())
+                if (position.IsValid() &&
+                   !(pieces.ContainsKey(position) && pieces[position].Colour == Colour))
                 {
                     moveList.Add(position);
                 }

@@ -17,6 +17,10 @@ namespace Chess.Domain.Models.Pieces
                 var position = Position.Clone(Position) + delta;
                 while (position.IsValid())
                 {
+                    if (pieces.ContainsKey(position) && 
+                        pieces[position].Colour == Colour)
+                        break;
+
                     moveList.Add(position);
                     if (pieces.ContainsKey(position)) break;
                     position += delta;

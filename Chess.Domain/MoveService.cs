@@ -1,66 +1,91 @@
-﻿using System.Collections.Generic;
-using Chess.Domain.Models;
+﻿using Chess.Domain.Models;
 using Chess.Domain.Models.Pieces;
 
 namespace Chess.Domain
 {
     public class MoveService : IMoveService
     {
-        public GameState MovePiece(Position start, Position end, GameState gameState)
-        {
-            var piece = gameState.Pieces[start];
-            gameState.Pieces.Remove(start);
 
-            piece.Position = end;
-            if (gameState.Pieces.ContainsKey(end))
+        public MoveServiceResult MovePiece(MovePiece movePiece)
+        { 
+            var piece = movePiece.Pieces[movePiece.Start];
+            movePiece.Pieces.Remove(movePiece.Start);
+
+            piece.Position = movePiece.End;
+            if (movePiece.Pieces.ContainsKey(movePiece.End))
             {
-                var capturedPiece = gameState.Pieces[end];
-                gameState.Pieces[end] = piece;
+                var capturedPiece = movePiece.Pieces[movePiece.End];
+                movePiece.Pieces[movePiece.End] = piece;
                 if (capturedPiece.Colour == Colour.White)
                 {
-                    gameState.WhitePieces.Remove(capturedPiece);
+                    movePiece.WhitePieces.Remove(capturedPiece);
                 }
                 else
                 {
-                    gameState.BlackPieces.Remove(capturedPiece);
+                    movePiece.BlackPieces.Remove(capturedPiece);
                 }
             }
             else
             {
-                // TODO Check for castling
-                gameState.Pieces.Add(end, piece);
+                if (IsCastleMove(movePiece.Start, movePiece.End, movePiece.Pieces[movePiece.Start]))
+                {
+                    ProcessCastleMove(movePiece, piece.Colour);
+                }
+
+                movePiece.Pieces.Add(movePiece.End, piece);
             }
 
-            return gameState;
+            return new MoveServiceResult
+            {
+                Pieces = movePiece.Pieces,
+                BlackPieces = movePiece.BlackPieces,
+                WhitePieces = movePiece.WhitePieces
+            };
         }
 
-        private bool IsCastleMove(Position start, Position end, IReadOnlyDictionary<Position, Piece> pieces)
+        private static bool IsCastleMove(Position start, Position end, Piece piece)
         {
-            if (!(pieces[start] is King kingPiece))
+            if (!(piece is King))
             {
                 return false;
             }
 
-            if (kingPiece.NumberMoves != 0)
-            {
-                return false;
-            }
+            var castleDelta = start.Column - end.Column;
+            return castleDelta == 2 || castleDelta == -2;
+        }
 
-            if (kingPiece.Colour == Colour.White &&
-                !(end.Equals(new Position(0, 1)) ||
-                  end.Equals(new Position(0, 6))))
+        private static void ProcessCastleMove(MovePiece movePiece, Colour pieceColour)
+        {
+            if (pieceColour == Colour.White)
             {
-                return false;
+                if (movePiece.Start.Column - movePiece.End.Column < 0)
+                {
+                    var rook = movePiece.Pieces[new Position(0, 0)];
+                    movePiece.Pieces.Remove(new Position(0, 0));
+                    movePiece.Pieces.Add(new Position(0, 3), rook);
+                }
+                else
+                {
+                    var rook = movePiece.Pieces[new Position(0, 0)];
+                    movePiece.Pieces.Remove(new Position(0, 0));
+                    movePiece.Pieces.Add(new Position(0, 3), rook);
+                }
             }
-
-            if (kingPiece.Colour == Colour.Black &&
-                !(end.Equals(new Position(7, 1)) ||
-                  end.Equals(new Position(7, 6))))
+            else
             {
-                return false;
+                if (movePiece.Start.Column - movePiece.End.Column < 0)
+                {
+                    var rook = movePiece.Pieces[new Position(7, 0)];
+                    movePiece.Pieces.Remove(new Position(7, 0));
+                    movePiece.Pieces.Add(new Position(7, 3), rook);
+                }
+                else
+                {
+                    var rook = movePiece.Pieces[new Position(7, 0)];
+                    movePiece.Pieces.Remove(new Position(7, 0));
+                    movePiece.Pieces.Add(new Position(7, 3), rook);
+                }
             }
-
-            return true;
         }
     }
 }

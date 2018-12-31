@@ -43,7 +43,7 @@ namespace Chess.Domain.Models
             var row = x.Row + y.Row;
             var column = x.Column + y.Column;
             return new Position(row, column);
-        } 
+        }
 
         public static Position FromString(string stringPosition)
         {

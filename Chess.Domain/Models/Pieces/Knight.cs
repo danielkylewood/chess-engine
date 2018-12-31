@@ -11,7 +11,18 @@ namespace Chess.Domain.Models.Pieces
 
         public override List<Position> GetMoves(IReadOnlyDictionary<Position, Piece> pieces)
         {
-            throw new System.NotImplementedException();
+            var moveList = new List<Position>();
+            foreach (var delta in Constants.KnightDeltas)
+            {
+                var position = Position.Clone(Position) + delta;
+                if (pieces.ContainsKey(position) && pieces[position].Colour == Colour) continue;
+                if (position.IsValid())
+                {
+                    moveList.Add(position);
+                }
+            }
+
+            return moveList;
         }
     }
 }

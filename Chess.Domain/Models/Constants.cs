@@ -6,6 +6,16 @@ namespace Chess.Domain.Models
 {
     public static class Constants
     {
+        public static List<Position> QueenDeltas => KingDeltas;
+
+        public static List<Position> RookDeltas => new List<Position>
+        {
+            new Position(1, 0),
+            new Position(-1, 0),
+            new Position(0, -1),
+            new Position(0, -1)
+        };
+
         public static List<Position> BishopDeltas => new List<Position>
         {
             new Position(1, 1),
@@ -24,6 +34,18 @@ namespace Chess.Domain.Models
             new Position(0, -1),
             new Position(1, -1),
             new Position(1, 0)
+        };
+
+        public static List<Position> KnightDeltas => new List<Position>
+        {
+            new Position(2, -1),
+            new Position(1, -2),
+            new Position(-1, -2),
+            new Position(-2, -1),
+            new Position(-2, 1),
+            new Position(-1, 2),
+            new Position(1, 2),
+            new Position(2, 1)
         };
 
         public static List<Position> WhitePawnStartingPositions => new List<Position>

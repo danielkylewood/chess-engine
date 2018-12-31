@@ -22,28 +22,22 @@ namespace Chess.Domain
 
         public GameState ProcessMove(Position start, Position end)
         {
-            var piece = _gameState.Pieces[start];
-            _gameState.Pieces.Remove(start);
-            
-            piece.Position = end;
-            if (_gameState.Pieces.ContainsKey(end))
+            var movePiece = new MovePiece
             {
-                var capturedPiece = _gameState.Pieces[end];
-                _gameState.Pieces[end] = piece;
-                if (capturedPiece.Colour == Colour.White)
-                {
-                    _gameState.WhitePieces.Remove(capturedPiece);
-                }
-                else
-                {
-                    _gameState.BlackPieces.Remove(capturedPiece);
-                }
-            }
-            else
-            {
-                // TODO Check for castling
-                _gameState.Pieces.Add(end, piece);
-            }
+                End = end,
+                Start = start,
+                Pieces = _gameState.Pieces,
+                BlackPieces = _gameState.BlackPieces,
+                WhitePieces = _gameState.WhitePieces
+            };
+
+            var moveServiceResult = _moveService.MovePiece(movePiece);
+
+            _gameState.Pieces = moveServiceResult.Pieces;
+            _gameState.BlackPieces = moveServiceResult.BlackPieces;
+            _gameState.WhitePieces = moveServiceResult.WhitePieces;
+
+            // Update valid moves
 
             return _gameState;
         }
