@@ -3,33 +3,6 @@
 
 // Write your JavaScript code.
 
-function highlightSquares(squareIds) {
-    var highlightClass = "board-square-highlighted";
-    var lightClass = "board-square-white";
-    var darkClass = "board-square-black";
-
-    var i;
-    for (i = 0; i < squareIds.length; i++) {
-        var element = document.getElementById(squareIds[i]);
-
-        element.removeClass(lightClass);
-        element.addClass(highlightClass);
-
-        if (element.classList.contains(lightClass)) {
-            element.removeClass(lightClass);
-            element.addClass(highlightClass);
-        }
-        else if (element.classList.contains(darkClass)) {
-            element.removeClass(darkClass);
-            element.addClass(highlightClass);
-        }
-        else if (element.classList.contains(highlightClass)) {
-            element.removeClass(highlightClass);
-            element.addClass(highlightClass);
-        }
-    }
-}
-
 function dragAndDropPiece(mainContainer, dragPiece, droppableSquares) {
     $(dragPiece).draggable(
         {
@@ -38,10 +11,10 @@ function dragAndDropPiece(mainContainer, dragPiece, droppableSquares) {
             helper: "clone",
             cursor: "move",
             drag: function (event, ui) {
-                $(ui.helper.prevObject).addClass("board-square-highlighted");
+                //$(ui.helper.prevObject).addClass("board-square-highlighted");
             },
             stop: function (event, ui) {
-                $(ui.helper.prevObject).removeClass("board-square-highlighted");
+                //$(ui.helper.prevObject).removeClass("board-square-highlighted");
             }
         });
 

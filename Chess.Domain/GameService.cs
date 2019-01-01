@@ -20,6 +20,7 @@ namespace Chess.Domain
         public GameState CreateGame(Guid gameId)
         {
             _gameState = new GameState(gameId);
+            _gameState.ValidMoves = GenerateValidMoves();
             return _gameState;
         }
 
@@ -39,7 +40,12 @@ namespace Chess.Domain
             _gameState.Pieces = moveServiceResult.Pieces;
             _gameState.BlackPieces = moveServiceResult.BlackPieces;
             _gameState.WhitePieces = moveServiceResult.WhitePieces;
+            _gameState.ValidMoves = GenerateValidMoves();
+            return _gameState;
+        }
 
+        private Dictionary<Piece, List<Position>> GenerateValidMoves()
+        {
             var validMoves = new Dictionary<Piece, List<Position>>();
             var piecesToProcess = _gameState.Turn == Colour.White ? _gameState.WhitePieces : _gameState.BlackPieces;
             foreach (var piece in piecesToProcess)
@@ -51,8 +57,7 @@ namespace Chess.Domain
                 }
             }
 
-            _gameState.ValidMoves = validMoves;
-            return _gameState;
+            return validMoves;
         }
     }
 }

@@ -68,7 +68,7 @@ body {
 }
 
 .board-square-highlighted {
-    background-color: #99d9ea;
+    filter: invert(100%);
 }
 
 /* Hide/rearrange for smaller screens */
