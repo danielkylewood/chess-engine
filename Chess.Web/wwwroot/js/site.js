@@ -47,7 +47,6 @@ function dragAndDropPieces(validMoves, uniqueSquares) {
             $.ajax({
                 contentType: "application/json",
                 data: JSON.stringify(moveRequest),
-                dataType: "json",
                 type: "PUT",
                 url: "/game/movepiece",
                 success: function (result) {
