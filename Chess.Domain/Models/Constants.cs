@@ -15,7 +15,7 @@ namespace Chess.Domain.Models
             new Position(1, 0),
             new Position(-1, 0),
             new Position(0, -1),
-            new Position(0, -1)
+            new Position(0, 1)
         };
 
         public static List<Position> BishopDeltas => new List<Position>

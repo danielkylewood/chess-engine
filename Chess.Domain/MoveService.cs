@@ -27,7 +27,7 @@ namespace Chess.Domain
             }
             else
             {
-                if (IsCastleMove(movePiece.Start, movePiece.End, movePiece.Pieces[movePiece.Start]))
+                if (IsCastleMove(movePiece.Start, movePiece.End, piece))
                 {
                     ProcessCastleMove(movePiece, piece.Colour);
                 }
@@ -60,9 +60,9 @@ namespace Chess.Domain
             {
                 if (movePiece.Start.Column - movePiece.End.Column < 0)
                 {
-                    var rook = movePiece.Pieces[new Position(0, 0)];
-                    movePiece.Pieces.Remove(new Position(0, 0));
-                    movePiece.Pieces.Add(new Position(0, 3), rook);
+                    var rook = movePiece.Pieces[new Position(0, 7)];
+                    movePiece.Pieces.Remove(new Position(0, 7));
+                    movePiece.Pieces.Add(new Position(0, 5), rook);
                 }
                 else
                 {
@@ -75,9 +75,9 @@ namespace Chess.Domain
             {
                 if (movePiece.Start.Column - movePiece.End.Column < 0)
                 {
-                    var rook = movePiece.Pieces[new Position(7, 0)];
-                    movePiece.Pieces.Remove(new Position(7, 0));
-                    movePiece.Pieces.Add(new Position(7, 3), rook);
+                    var rook = movePiece.Pieces[new Position(7, 7)];
+                    movePiece.Pieces.Remove(new Position(7, 7));
+                    movePiece.Pieces.Add(new Position(7, 5), rook);
                 }
                 else
                 {

@@ -4,6 +4,7 @@ using Chess.Domain;
 using Chess.Domain.Models;
 using Chess.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Chess.Web.Controllers
 {
@@ -26,18 +27,24 @@ namespace Chess.Web.Controllers
         {
             var gameState = _gameService.CreateGame(Guid.NewGuid());
             var gameStateViewModel = GameStateViewModel.FromGameState(gameState);
-            return View("Board", gameStateViewModel);
+            return RedirectToAction("ShowGame");
         }
 
-        public IActionResult MovePiece(string start, string end)
+        [HttpPut]
+        public IActionResult MovePiece([FromBody] MoveRequest moveRequest)
         {
-            var endPosition = Position.FromString(end);
-            var startPosition = Position.FromString(start);
+            var endPosition = Position.FromString(moveRequest.End);
+            var startPosition = Position.FromString(moveRequest.Start);
 
-            var gameState = _gameService.ProcessMove(startPosition, endPosition);
-            var gameStateViewModel = GameStateViewModel.FromGameState(gameState);
+            _gameService.ProcessMove(startPosition, endPosition);
+            return Ok();
+        }
 
-            return View("Board", gameStateViewModel);
+        [HttpGet]
+        public IActionResult ShowGame()
+        {
+            var gameState = _gameService._gameState;
+            return View("Board", GameStateViewModel.FromGameState(gameState));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

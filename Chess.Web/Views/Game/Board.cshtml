@@ -30,14 +30,14 @@
 </div>
 
 @section Scripts
-{
+    {
     <script src="/lib/jquery-ui/jquery-ui.js"></script>
     <script type="text/javascript">
         var validMoves = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ValidMoves));
-        validMoves.forEach(function(validMove) {
-            $(document).ready(function() {
-                dragAndDropPiece("#main-container", validMove.PiecePosition, validMove.PieceMoves);
-            });
+        var uniqueSquares = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UniqueMoveableSquares));
+
+        $(document).ready(function() {
+            dragAndDropPieces(validMoves, uniqueSquares);
         });
     </script>
 }

@@ -20,12 +20,11 @@ namespace Chess.Domain.Models.Pieces
             if (!pieces.ContainsKey(position))
             {
                 moveList.Add(position);
-            }
-
-            position += pawnDelta;
-            if (NumberMoves == 0 && !pieces.ContainsKey(position))
-            {
-                moveList.Add(position);
+                position += pawnDelta;
+                if (NumberMoves == 0 && !pieces.ContainsKey(position))
+                {
+                    moveList.Add(position);
+                }
             }
 
             var attackDeltaLeft = Position + (Colour == Colour.White ? new Position(1, -1) : new Position(-1, -1));

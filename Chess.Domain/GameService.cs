@@ -8,7 +8,7 @@ namespace Chess.Domain
 {
     public class GameService : IGameService
     {
-        private GameState _gameState;
+        public GameState _gameState { get; set; }
 
         private readonly IMoveService _moveService;
 

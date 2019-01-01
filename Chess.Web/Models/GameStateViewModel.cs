@@ -10,6 +10,7 @@ namespace Chess.Web.Models
         public Colour CurrentPlayer { get; set; }
         public Dictionary<string, Piece> Pieces { get; set; }
         public List<ValidMove> ValidMoves { get; set; }
+        public List<string> UniqueMoveableSquares { get; set; }
 
         public static GameStateViewModel FromGameState(GameState gameState)
         {
@@ -19,12 +20,20 @@ namespace Chess.Web.Models
                 PieceMoves = gameState.ValidMoves[piece].Select(x => "#square-" + x.ToString()).ToList()
             }).ToList();
 
+            var uniqueSquareList = new List<string>();
+            foreach (var move in validMoves)
+            {
+                uniqueSquareList.AddRange(move.PieceMoves);
+            }
+
             var gameViewModel = new GameStateViewModel
             {
                 ValidMoves = validMoves,
                 CurrentPlayer = gameState.CurrentPlayer,
+                UniqueMoveableSquares = uniqueSquareList.Distinct().ToList(),
                 Pieces = gameState.Pieces.ToDictionary(pair => pair.Key.ToString(), pair => pair.Value)
             };
+
             return gameViewModel;
         }
     }

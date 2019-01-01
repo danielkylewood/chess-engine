@@ -47,8 +47,8 @@ namespace Chess.Domain.Models
 
         public static Position FromString(string stringPosition)
         {
-            var row = stringPosition[0];
-            var column = stringPosition[1];
+            var row = int.Parse(stringPosition[0].ToString());
+            var column = int.Parse(stringPosition[1].ToString());
             return new Position(row, column);
         }
 
