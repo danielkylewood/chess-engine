@@ -1,0 +1,14 @@
+﻿<div class="row" id="board-view" />
+
+@section Scripts{
+    <script src="/lib/jquery-ui/jquery-ui.js"></script>
+    <script>
+        $.ajax({
+            url: "/game/getgame",
+            type: "GET"
+        })
+        .done(function (partialViewResult) {
+            $("#board-view").html(partialViewResult);
+        });
+    </script>
+}

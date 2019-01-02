@@ -53,8 +53,7 @@ namespace Chess.Domain.Models.Pieces
             return new List<Position>
             {
                 new Position(Position.Row, Position.Column - 1),
-                new Position(Position.Row, Position.Column - 2),
-                new Position(Position.Row, Position.Column - 3)
+                new Position(Position.Row, Position.Column - 2)
             };
         }
 

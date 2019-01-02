@@ -62,12 +62,14 @@ namespace Chess.Domain
                 {
                     var rook = movePiece.Pieces[new Position(0, 7)];
                     movePiece.Pieces.Remove(new Position(0, 7));
+                    rook.Position = new Position(0, 5);
                     movePiece.Pieces.Add(new Position(0, 5), rook);
                 }
                 else
                 {
                     var rook = movePiece.Pieces[new Position(0, 0)];
                     movePiece.Pieces.Remove(new Position(0, 0));
+                    rook.Position = new Position(0, 3);
                     movePiece.Pieces.Add(new Position(0, 3), rook);
                 }
             }
@@ -77,12 +79,14 @@ namespace Chess.Domain
                 {
                     var rook = movePiece.Pieces[new Position(7, 7)];
                     movePiece.Pieces.Remove(new Position(7, 7));
+                    rook.Position = new Position(7, 5);
                     movePiece.Pieces.Add(new Position(7, 5), rook);
                 }
                 else
                 {
                     var rook = movePiece.Pieces[new Position(7, 0)];
                     movePiece.Pieces.Remove(new Position(7, 0));
+                    rook.Position = new Position(7, 3);
                     movePiece.Pieces.Add(new Position(7, 3), rook);
                 }
             }

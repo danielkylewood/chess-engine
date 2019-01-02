@@ -4,7 +4,6 @@ using Chess.Domain;
 using Chess.Domain.Models;
 using Chess.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Chess.Web.Controllers
 {
@@ -23,12 +22,17 @@ namespace Chess.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateGame()
+        public IActionResult ShowGame()
+        {   
+            _gameService.CreateGame(Guid.NewGuid());
+            return View("Game");
+        }
+
+        [HttpGet]
+        public IActionResult GetGame()
         {
-            // https://stackoverflow.com/questions/19392212/how-to-use-jquery-or-ajax-to-update-razor-partial-view-in-c-asp-net-for-a-mvc-p
-            var gameState = _gameService.CreateGame(Guid.NewGuid());
-            var gameStateViewModel = GameStateViewModel.FromGameState(gameState);
-            return RedirectToAction("ShowGame");
+            var gameState = _gameService._gameState;
+            return PartialView("_Board", GameStateViewModel.FromGameState(gameState));
         }
 
         [HttpPut]
@@ -38,14 +42,7 @@ namespace Chess.Web.Controllers
             var startPosition = Position.FromString(moveRequest.Start);
 
             _gameService.ProcessMove(startPosition, endPosition);
-            return Ok();
-        }
-
-        [HttpGet]
-        public IActionResult ShowGame()
-        {
-            var gameState = _gameService._gameState;
-            return PartialView("Board", GameStateViewModel.FromGameState(gameState));
+            return PartialView("_Board", GameStateViewModel.FromGameState(_gameService._gameState));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

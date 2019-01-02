@@ -41,6 +41,7 @@ body {
     border-style: solid;
     border-color: black;
     position: center;
+    z-index: 0;
 }
 
 .board-square {
@@ -53,6 +54,7 @@ body {
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     float: left;
+    z-index: 1;
 }
 
 .board-square img {
@@ -68,7 +70,7 @@ body {
 }
 
 .board-square-highlighted {
-    filter: invert(100%);
+    filter: invert(80%);
 }
 
 /* Hide/rearrange for smaller screens */

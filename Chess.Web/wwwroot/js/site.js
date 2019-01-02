@@ -21,7 +21,9 @@ function dragAndDropPieces(validMoves, uniqueSquares) {
                 containment: "#main-container",
                 helper: "clone",
                 cursor: "move",
-                drag: function(event, ui) {},
+                zIndex: "1000",
+                drag: function(event, ui) {
+                },
                 stop: function(event, ui) {}
             });
     });
@@ -48,10 +50,10 @@ function dragAndDropPieces(validMoves, uniqueSquares) {
                 contentType: "application/json",
                 data: JSON.stringify(moveRequest),
                 type: "PUT",
-                url: "/game/movepiece",
-                success: function (result) {
-                    location.reload(true);
-                }
+                url: "/game/movepiece"
+            })
+            .always(function (partialViewResult) {
+                $("#board-view").html(partialViewResult);
             });
         }
     });

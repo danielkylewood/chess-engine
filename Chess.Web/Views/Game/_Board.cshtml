@@ -29,15 +29,12 @@
     </div>
 </div>
 
-@section Scripts
-{
-    <script src="/lib/jquery-ui/jquery-ui.js"></script>
-    <script type="text/javascript">
-        var validMoves = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ValidMoves));
-        var uniqueSquares = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UniqueMoveableSquares));
+<script src="/lib/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript">
+    var validMoves = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ValidMoves));
+    var uniqueSquares = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UniqueMoveableSquares));
 
-        $(document).ready(function() {
-            dragAndDropPieces(validMoves, uniqueSquares);
-        });
-    </script>
-}
+    $(document).ready(function() {
+        dragAndDropPieces(validMoves, uniqueSquares);
+    });
+</script>

@@ -37,6 +37,7 @@ namespace Chess.Domain
 
             var moveServiceResult = _moveService.MovePiece(movePiece);
 
+            _gameState.MoveNumber += 1;
             _gameState.Pieces = moveServiceResult.Pieces;
             _gameState.BlackPieces = moveServiceResult.BlackPieces;
             _gameState.WhitePieces = moveServiceResult.WhitePieces;
