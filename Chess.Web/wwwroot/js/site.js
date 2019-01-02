@@ -19,7 +19,6 @@ function dragAndDropPieces(validMoves, uniqueSquares) {
             {
                 revert: "invalid",
                 containment: "#main-container",
-                helper: "clone",
                 cursor: "move",
                 zIndex: "1000",
                 drag: function(event, ui) {
@@ -33,19 +32,17 @@ function dragAndDropPieces(validMoves, uniqueSquares) {
         $(uniqueSquare).droppable({
             accept: ("." + uniqueSquare.substring(1)),
             activeClass: "board-square-highlighted",
-            drop: function(event, ui) {
-                acceptDraggablePiece(ui.draggable, $(this).attr("id"));
+            drop: function (event, ui) {
+                var squareId = $(this).attr("id").toString();
+                acceptDraggablePiece(ui.draggable, squareId);
             }
         });
 
         function acceptDraggablePiece(item, square) {
-            $("#" + square.toString()).append(item);
-            $(item).removeClass("board-square-highlighted");
-
-            var endId = square.toString().substring(7);
+            var endId = square.substring(7);
             var startId = item.attr("id").toString().substring(6);
             var moveRequest = { Start: startId, End: endId };
-
+            
             $.ajax({
                 contentType: "application/json",
                 data: JSON.stringify(moveRequest),
