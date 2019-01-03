@@ -48,6 +48,83 @@ namespace Chess.Domain.Models.Pieces
             return moveList;
         }
 
+        public List<Piece> IsCheck(IDictionary<Position, Piece> pieces)
+        {
+            var checkingPieces = new List<Piece>();
+            foreach (var delta in Constants.KnightDeltas)
+            {
+                var position = Position + delta;
+                if (pieces.ContainsKey(position) && pieces[position] is Knight knight)
+                {
+                    checkingPieces.Add(knight);
+                }
+            }
+            
+            foreach (var delta in Constants.BishopDeltas)
+            {
+                var position = Position + delta;
+                while (position.IsValid())
+                {
+                    if (pieces.ContainsKey(position))
+                    {
+                        if (pieces[position].Colour == Colour)
+                            break;
+
+                        switch (pieces[position])
+                        {
+                            case Queen queen:
+                                checkingPieces.Add(queen);
+                                break;
+                            case Bishop bishop:
+                                checkingPieces.Add(bishop);
+                                break;
+                        }
+                    }
+                    position += delta;
+                }
+            }
+
+            foreach (var delta in Constants.RookDeltas)
+            {
+                var position = Position + delta;
+                while (position.IsValid())
+                {
+                    if (pieces.ContainsKey(position))
+                    {
+                        if (pieces[position].Colour == Colour)
+                            break;
+
+                        switch (pieces[position])
+                        {
+                            case Queen queen:
+                                checkingPieces.Add(queen);
+                                break;
+                            case Rook rook:
+                                checkingPieces.Add(rook);
+                                break;
+                        }
+                    }
+                    position += delta;
+                }
+            }
+
+            var pawnRowDelta = Colour == Colour.White ? 1 : -1;
+            var pawnChecks = new List<Position>
+            {
+                new Position(Position.Row + pawnRowDelta, Position.Column + 1),
+                new Position(Position.Row + pawnRowDelta, Position.Column - 1)
+            };
+
+            foreach (var pawnPosition in pawnChecks)
+            {
+                if (pieces.ContainsKey(pawnPosition) && pieces[pawnPosition] is Pawn pawn && pawn.Colour != Colour)
+                {
+                    checkingPieces.Add(pawn);
+                }
+            }
+            return checkingPieces;
+        }
+
         private IEnumerable<Position> GetLeftCastleSquares()
         {
             return new List<Position>

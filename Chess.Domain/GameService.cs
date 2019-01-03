@@ -38,6 +38,7 @@ namespace Chess.Domain
             var moveServiceResult = _moveService.MovePiece(movePiece, _gameState.MoveNumber);
 
             _gameState.MoveNumber += 1;
+            _gameState.IsCheck = IsCheck(_gameState);
             _gameState.Pieces = moveServiceResult.Pieces;
             _gameState.BlackPieces = moveServiceResult.BlackPieces;
             _gameState.WhitePieces = moveServiceResult.WhitePieces;
@@ -48,12 +49,12 @@ namespace Chess.Domain
         private Dictionary<Piece, List<Position>> GenerateValidMoves()
         {
             var validMoves = new Dictionary<Piece, List<Position>>();
-            var piecesToProcess = _gameState.Turn == Colour.White ? _gameState.WhitePieces : _gameState.BlackPieces;
+            var piecesToProcess = _gameState.CurrentPlayer == Colour.White ? _gameState.WhitePieces : _gameState.BlackPieces;
             foreach (var piece in piecesToProcess)
             {
-                var pieceMoveRequest = piece is Pawn
-                    ? new PawnMoveRequest(_gameState.Pieces, _gameState.MoveNumber)
-                    : new PieceMoveRequest(_gameState.Pieces);
+                var pieceMoveRequest = PieceMoveFactory.GetPieceMoveRequest(piece, _gameState.Pieces,
+                    _gameState.MoveNumber, _gameState.IsCheck);
+
                 var moves = piece.GetMoves(pieceMoveRequest);
                 if (moves.Any())
                 {
@@ -62,6 +63,16 @@ namespace Chess.Domain
             }
 
             return validMoves;
+        }
+
+        private bool IsCheck(GameState gameState)
+        {
+            var pieces = gameState.CurrentPlayer == Colour.White ? gameState.WhitePieces : gameState.BlackPieces;
+            var king = gameState.CurrentPlayer == Colour.White
+                ? gameState.WhitePieces.First(x => x is King) as King
+                : gameState.BlackPieces.First(x => x is King) as King;
+
+            return king != null && king.IsCheck(_gameState.Pieces).Any();
         }
     }
 }

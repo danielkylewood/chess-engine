@@ -33,31 +33,29 @@ namespace Chess.Domain.Models.Pieces
 
             var attackDeltaLeft = Position + (Colour == Colour.White ? new Position(1, -1) : new Position(-1, -1));
             var attackDeltaRight = Position + (Colour == Colour.White ? new Position(1, 1) : new Position(-1, 1));
-            var enPassantDeltaLeft = new Position(0, -1);
-            var enPassantDeltaRight = new Position(0, 1);
+            var attackList = new List<Position> {attackDeltaRight, attackDeltaLeft};
 
-            if (pawnMoveRequest.Pieces.ContainsKey(attackDeltaLeft)
-                && pawnMoveRequest.Pieces[attackDeltaLeft].Colour != Colour ||
-                CanEnPassant(pawnMoveRequest, enPassantDeltaLeft))
+            foreach (var attackPosition in attackList)
             {
-                moveList.Add(attackDeltaLeft);
-            }
+                var enPassantDelta = Colour == Colour.White
+                    ? new Position(attackPosition.Row - 1, attackPosition.Column)
+                    : new Position(attackPosition.Row + 1, attackPosition.Column);
 
-            if (pawnMoveRequest.Pieces.ContainsKey(attackDeltaRight) &&
-                pawnMoveRequest.Pieces[attackDeltaRight].Colour != Colour ||
-                CanEnPassant(pawnMoveRequest, enPassantDeltaRight))
-            {
-                moveList.Add(attackDeltaRight);
+                if (pawnMoveRequest.Pieces.ContainsKey(attackPosition)
+                    && pawnMoveRequest.Pieces[attackPosition].Colour != Colour ||
+                    CanEnPassant(pawnMoveRequest, enPassantDelta))
+                {
+                    moveList.Add(attackPosition);
+                }
             }
-
-                return moveList;
+            return moveList;
         }
 
-        private bool CanEnPassant(PawnMoveRequest pawnMoveRequest, Position enPassantDelta)
+        private bool CanEnPassant(PawnMoveRequest pawnMoveRequest, Position enPassantPosition)
         {
             var enPassantRow = Colour == Colour.White ? 4 : 3;
-            if (pawnMoveRequest.Pieces.ContainsKey(Position + enPassantDelta) 
-                && pawnMoveRequest.Pieces[Position + enPassantDelta] is Pawn pawn)
+            if (pawnMoveRequest.Pieces.ContainsKey(enPassantPosition) 
+                && pawnMoveRequest.Pieces[enPassantPosition] is Pawn pawn)
             {
                 if (pawn.Colour != Colour && 
                     Position.Row == enPassantRow && 

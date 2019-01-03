@@ -22,6 +22,7 @@ namespace Chess.Domain.Models.Pieces
                         break;
 
                     moveList.Add(position);
+
                     if (pieceMoveRequest.Pieces.ContainsKey(position)) break;
                     position += delta;
                 }
