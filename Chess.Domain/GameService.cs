@@ -26,7 +26,7 @@ namespace Chess.Domain
 
         public GameState ProcessMove(Position start, Position end)
         {
-            var movePiece = new MovePiece
+            var movePiece = new MoveServiceRequest
             {
                 End = end,
                 Start = start,
@@ -35,7 +35,7 @@ namespace Chess.Domain
                 WhitePieces = _gameState.WhitePieces
             };
 
-            var moveServiceResult = _moveService.MovePiece(movePiece);
+            var moveServiceResult = _moveService.MovePiece(movePiece, _gameState.MoveNumber);
 
             _gameState.MoveNumber += 1;
             _gameState.Pieces = moveServiceResult.Pieces;
@@ -51,7 +51,10 @@ namespace Chess.Domain
             var piecesToProcess = _gameState.Turn == Colour.White ? _gameState.WhitePieces : _gameState.BlackPieces;
             foreach (var piece in piecesToProcess)
             {
-                var moves = piece.GetMoves(_gameState.Pieces);
+                var pieceMoveRequest = piece is Pawn
+                    ? new PawnMoveRequest(_gameState.Pieces, _gameState.MoveNumber)
+                    : new PieceMoveRequest(_gameState.Pieces);
+                var moves = piece.GetMoves(pieceMoveRequest);
                 if (moves.Any())
                 {
                     validMoves.Add(piece, moves);

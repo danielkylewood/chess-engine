@@ -7,20 +7,11 @@ namespace Chess.Domain.Models.Pieces
     {
         protected readonly Guid Id;
         public readonly Colour Colour;
-        
+
+        public int LastMoved;
         public string ImageName;
         public int NumberMoves;
-
-        private Position _position;
-        public Position Position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                NumberMoves += 1;
-            }
-        }
+        public Position Position;
 
         protected Piece(Colour colour, Position position)
         {
@@ -28,9 +19,17 @@ namespace Chess.Domain.Models.Pieces
             Colour = colour;
             Position = position;
             NumberMoves = 0;
+            LastMoved = 0;
         }
 
-        public abstract List<Position> GetMoves(IDictionary<Position, Piece> pieces);
+        public abstract List<Position> GetMoves(PieceMoveRequest pieceMoveRequest);
+
+        public void MovePiece(Position position, int moveNumber)
+        {
+            Position = position;
+            NumberMoves += 1;
+            LastMoved = moveNumber;
+        }
 
         public override bool Equals(object other)
         {

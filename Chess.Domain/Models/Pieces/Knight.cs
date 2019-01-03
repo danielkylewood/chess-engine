@@ -9,13 +9,13 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-knight.png";
         }
 
-        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(PieceMoveRequest pieceMoveRequest)
         {
             var moveList = new List<Position>();
             foreach (var delta in Constants.KnightDeltas)
             {
                 var position = Position.Clone(Position) + delta;
-                if (pieces.ContainsKey(position) && pieces[position].Colour == Colour) continue;
+                if (pieceMoveRequest.Pieces.ContainsKey(position) && pieceMoveRequest.Pieces[position].Colour == Colour) continue;
                 if (position.IsValid())
                 {
                     moveList.Add(position);

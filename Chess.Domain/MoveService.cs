@@ -5,42 +5,50 @@ namespace Chess.Domain
 {
     public class MoveService : IMoveService
     {
-
-        public MoveServiceResult MovePiece(MovePiece movePiece)
+        public MoveServiceResult MovePiece(MoveServiceRequest moveRequest, int moveNumber)
         { 
-            var piece = movePiece.Pieces[movePiece.Start];
-            movePiece.Pieces.Remove(movePiece.Start);
-
-            piece.Position = movePiece.End;
-            if (movePiece.Pieces.ContainsKey(movePiece.End))
+            var piece = moveRequest.Pieces[moveRequest.Start];
+            if (moveRequest.Pieces.ContainsKey(moveRequest.End))
             {
-                var capturedPiece = movePiece.Pieces[movePiece.End];
-                movePiece.Pieces[movePiece.End] = piece;
-                if (capturedPiece.Colour == Colour.White)
-                {
-                    movePiece.WhitePieces.Remove(capturedPiece);
-                }
-                else
-                {
-                    movePiece.BlackPieces.Remove(capturedPiece);
-                }
+                RemovePieceFromBoard(moveRequest, moveRequest.End);
             }
             else
             {
-                if (IsCastleMove(movePiece.Start, movePiece.End, piece))
+                if (IsCastleMove(moveRequest.Start, moveRequest.End, piece))
                 {
-                    ProcessCastleMove(movePiece, piece.Colour);
+                    ProcessCastleMove(moveRequest, piece.Colour, moveNumber);
                 }
-
-                movePiece.Pieces.Add(movePiece.End, piece);
+                else if (piece is Pawn && moveRequest.Start.Column != moveRequest.End.Column)
+                {
+                    var enPassantPawnPosition = new Position(moveRequest.Start.Row, moveRequest.End.Column);
+                    RemovePieceFromBoard(moveRequest, enPassantPawnPosition);
+                }
             }
+
+            moveRequest.Pieces.Remove(moveRequest.Start);
+            moveRequest.Pieces.Add(moveRequest.End, piece);
+            piece.MovePiece(moveRequest.End, moveNumber);
 
             return new MoveServiceResult
             {
-                Pieces = movePiece.Pieces,
-                BlackPieces = movePiece.BlackPieces,
-                WhitePieces = movePiece.WhitePieces
+                Pieces = moveRequest.Pieces,
+                BlackPieces = moveRequest.BlackPieces,
+                WhitePieces = moveRequest.WhitePieces
             };
+        }
+
+        public void RemovePieceFromBoard(MoveServiceRequest moveRequest, Position piecePosition)
+        {
+            var capturedPiece = moveRequest.Pieces[piecePosition];
+            moveRequest.Pieces.Remove(piecePosition);
+            if (capturedPiece.Colour == Colour.White)
+            {
+                moveRequest.WhitePieces.Remove(capturedPiece);
+            }
+            else
+            {
+                moveRequest.BlackPieces.Remove(capturedPiece);
+            }
         }
 
         private static bool IsCastleMove(Position start, Position end, Piece piece)
@@ -54,40 +62,40 @@ namespace Chess.Domain
             return castleDelta == 2 || castleDelta == -2;
         }
 
-        private static void ProcessCastleMove(MovePiece movePiece, Colour pieceColour)
+        private static void ProcessCastleMove(MoveServiceRequest moveServiceRequest, Colour pieceColour, int moveNumber)
         {
             if (pieceColour == Colour.White)
             {
-                if (movePiece.Start.Column - movePiece.End.Column < 0)
+                if (moveServiceRequest.Start.Column - moveServiceRequest.End.Column < 0)
                 {
-                    var rook = movePiece.Pieces[new Position(0, 7)];
-                    movePiece.Pieces.Remove(new Position(0, 7));
-                    rook.Position = new Position(0, 5);
-                    movePiece.Pieces.Add(new Position(0, 5), rook);
+                    var rook = moveServiceRequest.Pieces[new Position(0, 7)];
+                    moveServiceRequest.Pieces.Remove(new Position(0, 7));
+                    rook.MovePiece(new Position(0, 5), moveNumber);
+                    moveServiceRequest.Pieces.Add(new Position(0, 5), rook);
                 }
                 else
                 {
-                    var rook = movePiece.Pieces[new Position(0, 0)];
-                    movePiece.Pieces.Remove(new Position(0, 0));
-                    rook.Position = new Position(0, 3);
-                    movePiece.Pieces.Add(new Position(0, 3), rook);
+                    var rook = moveServiceRequest.Pieces[new Position(0, 0)];
+                    moveServiceRequest.Pieces.Remove(new Position(0, 0));
+                    rook.MovePiece(new Position(0, 3), moveNumber);
+                    moveServiceRequest.Pieces.Add(new Position(0, 3), rook);
                 }
             }
             else
             {
-                if (movePiece.Start.Column - movePiece.End.Column < 0)
+                if (moveServiceRequest.Start.Column - moveServiceRequest.End.Column < 0)
                 {
-                    var rook = movePiece.Pieces[new Position(7, 7)];
-                    movePiece.Pieces.Remove(new Position(7, 7));
-                    rook.Position = new Position(7, 5);
-                    movePiece.Pieces.Add(new Position(7, 5), rook);
+                    var rook = moveServiceRequest.Pieces[new Position(7, 7)];
+                    moveServiceRequest.Pieces.Remove(new Position(7, 7));
+                    rook.MovePiece(new Position(7, 5), moveNumber);
+                    moveServiceRequest.Pieces.Add(new Position(7, 5), rook);
                 }
                 else
                 {
-                    var rook = movePiece.Pieces[new Position(7, 0)];
-                    movePiece.Pieces.Remove(new Position(7, 0));
-                    rook.Position = new Position(7, 3);
-                    movePiece.Pieces.Add(new Position(7, 3), rook);
+                    var rook = moveServiceRequest.Pieces[new Position(7, 0)];
+                    moveServiceRequest.Pieces.Remove(new Position(7, 0));
+                    rook.MovePiece(new Position(7, 3), moveNumber);
+                    moveServiceRequest.Pieces.Add(new Position(7, 3), rook);
                 }
             }
         }

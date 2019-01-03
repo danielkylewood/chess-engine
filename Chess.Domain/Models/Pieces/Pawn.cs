@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Chess.Domain.Models.Pieces
 {
@@ -9,19 +10,22 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-pawn.png";
         }
 
-        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(PieceMoveRequest pieceMoveRequest)
         {
-            // TODO En Passant
+            if (!(pieceMoveRequest is PawnMoveRequest pawnMoveRequest))
+            {
+                throw new ArgumentException("Expected pawn move request.");
+            }
 
             var moveList = new List<Position>();
             var pawnDelta = Colour == Colour.White ? Constants.WhitePawnDelta : Constants.BlackPawnDelta;
             var position = Position + pawnDelta;
 
-            if (!pieces.ContainsKey(position))
+            if (!pawnMoveRequest.Pieces.ContainsKey(position))
             {
                 moveList.Add(position);
                 position += pawnDelta;
-                if (NumberMoves == 0 && !pieces.ContainsKey(position))
+                if (NumberMoves == 0 && !pawnMoveRequest.Pieces.ContainsKey(position))
                 {
                     moveList.Add(position);
                 }
@@ -29,18 +33,42 @@ namespace Chess.Domain.Models.Pieces
 
             var attackDeltaLeft = Position + (Colour == Colour.White ? new Position(1, -1) : new Position(-1, -1));
             var attackDeltaRight = Position + (Colour == Colour.White ? new Position(1, 1) : new Position(-1, 1));
+            var enPassantDeltaLeft = new Position(0, -1);
+            var enPassantDeltaRight = new Position(0, 1);
 
-            if (pieces.ContainsKey(attackDeltaLeft) && pieces[attackDeltaLeft].Colour != Colour)
+            if (pawnMoveRequest.Pieces.ContainsKey(attackDeltaLeft)
+                && pawnMoveRequest.Pieces[attackDeltaLeft].Colour != Colour ||
+                CanEnPassant(pawnMoveRequest, enPassantDeltaLeft))
             {
                 moveList.Add(attackDeltaLeft);
             }
 
-            if (pieces.ContainsKey(attackDeltaRight) && pieces[attackDeltaRight].Colour != Colour)
+            if (pawnMoveRequest.Pieces.ContainsKey(attackDeltaRight) &&
+                pawnMoveRequest.Pieces[attackDeltaRight].Colour != Colour ||
+                CanEnPassant(pawnMoveRequest, enPassantDeltaRight))
             {
                 moveList.Add(attackDeltaRight);
             }
 
-            return moveList;
+                return moveList;
+        }
+
+        private bool CanEnPassant(PawnMoveRequest pawnMoveRequest, Position enPassantDelta)
+        {
+            var enPassantRow = Colour == Colour.White ? 4 : 3;
+            if (pawnMoveRequest.Pieces.ContainsKey(Position + enPassantDelta) 
+                && pawnMoveRequest.Pieces[Position + enPassantDelta] is Pawn pawn)
+            {
+                if (pawn.Colour != Colour && 
+                    Position.Row == enPassantRow && 
+                    pawnMoveRequest.MoveNumber - pawn.LastMoved == 1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
         }
     }
 }

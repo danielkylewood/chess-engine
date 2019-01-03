@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Chess.Domain.Models;
-using Chess.Domain.Models.Pieces;
+﻿using Chess.Domain.Models;
 
 namespace Chess.Domain
 {
     public interface IMoveService
     {
-        MoveServiceResult MovePiece(MovePiece movePiece);
+        MoveServiceResult MovePiece(MoveServiceRequest moveRequest, int moveNumber);
     }
 }

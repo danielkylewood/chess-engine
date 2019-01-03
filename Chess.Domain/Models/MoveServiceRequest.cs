@@ -3,7 +3,7 @@ using Chess.Domain.Models.Pieces;
 
 namespace Chess.Domain.Models
 {
-    public class MovePiece
+    public class MoveServiceRequest
     {
         public Position Start { get; set; }
         public Position End { get; set; }

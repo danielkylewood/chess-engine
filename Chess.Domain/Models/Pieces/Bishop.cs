@@ -9,7 +9,7 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-bishop.png";
         }
 
-        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(PieceMoveRequest pieceMoveRequest)
         {
             var moveList = new List<Position>();
             foreach (var delta in Constants.BishopDeltas)
@@ -17,12 +17,12 @@ namespace Chess.Domain.Models.Pieces
                 var position = Position.Clone(Position) + delta;
                 while (position.IsValid())
                 {
-                    if (pieces.ContainsKey(position) && 
-                        pieces[position].Colour == Colour)
+                    if (pieceMoveRequest.Pieces.ContainsKey(position) &&
+                        pieceMoveRequest.Pieces[position].Colour == Colour)
                         break;
 
                     moveList.Add(position);
-                    if (pieces.ContainsKey(position)) break;
+                    if (pieceMoveRequest.Pieces.ContainsKey(position)) break;
                     position += delta;
                 }
             }

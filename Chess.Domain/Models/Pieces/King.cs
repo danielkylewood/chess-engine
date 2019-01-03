@@ -11,20 +11,20 @@ namespace Chess.Domain.Models.Pieces
             ImageName = $"{colour.ToString().ToLowerInvariant()}-king.png";
         }
 
-        public override List<Position> GetMoves(IDictionary<Position, Piece> pieces)
+        public override List<Position> GetMoves(PieceMoveRequest pieceMoveRequest)
         {
             var moveList = new List<Position>();
             foreach (var delta in Constants.KingDeltas)
             {
                 var position = Position.Clone(Position) + delta;
                 if (position.IsValid() &&
-                   !(pieces.ContainsKey(position) && pieces[position].Colour == Colour))
+                   !(pieceMoveRequest.Pieces.ContainsKey(position) && pieceMoveRequest.Pieces[position].Colour == Colour))
                 {
                     moveList.Add(position);
                 }
             }
 
-            if (CanCastle(pieces, out var castleDirection))
+            if (CanCastle(pieceMoveRequest.Pieces, out var castleDirection))
             {
                 switch (castleDirection)
                 {
