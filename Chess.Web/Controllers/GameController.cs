@@ -24,15 +24,8 @@ namespace Chess.Web.Controllers
         [HttpPost]
         public IActionResult ShowGame()
         {   
-            _gameService.CreateGame(Guid.NewGuid());
-            return View("Game");
-        }
-
-        [HttpGet]
-        public IActionResult GetGame()
-        {
-            var gameState = _gameService._gameState;
-            return PartialView("_Board", GameStateViewModel.FromGameState(gameState));
+            var gameState = _gameService.CreateGame(Guid.NewGuid());
+            return View("Game", GameViewModel.FromGameState(gameState));
         }
 
         [HttpPut]
@@ -42,7 +35,7 @@ namespace Chess.Web.Controllers
             var startPosition = Position.FromString(moveRequest.Start);
 
             _gameService.ProcessMove(startPosition, endPosition);
-            return PartialView("_Board", GameStateViewModel.FromGameState(_gameService._gameState));
+            return PartialView("Game", GameViewModel.FromGameState(_gameService._gameState));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

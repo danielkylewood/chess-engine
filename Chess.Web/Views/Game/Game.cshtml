@@ -1,14 +1,38 @@
-﻿<div class="row" id="board-view" />
+﻿@model Chess.Web.Models.GameViewModel
+
+<div class="board">
+    <div>
+        @for (var i = 0; i <= 7; i++)
+        {
+            for (var j = 0; j <= 7; j++)
+            {
+                var squareId = Model.Board[i][j].SquareId;
+                var squareClass = Model.Board[i][j].SquareClass;
+                <div class="board-square @squareClass" id="square-@squareId">
+                    @{
+                        if (Model.Pieces.ContainsKey(squareId))
+                        {
+                            <img src="~/images/@Model.Pieces[squareId].ImageName" alt="" id="piece-@Model.Pieces[squareId].ToString()"/>
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
 
 @section Scripts{
     <script src="/lib/jquery-ui/jquery-ui.js"></script>
     <script>
-        $.ajax({
-            url: "/game/getgame",
-            type: "GET"
-        })
-        .done(function (partialViewResult) {
-            $("#board-view").html(partialViewResult);
+        $(document).ready(function() {
+            $.ajax({
+                    url: "/game/getgame",
+                    type: "GET"
+                })
+                .done(function(partialViewResult) {
+                    $("#board-view").html(partialViewResult);
+                });
         });
     </script>
 }

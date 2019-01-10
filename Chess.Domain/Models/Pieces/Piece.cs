@@ -31,6 +31,11 @@ namespace Chess.Domain.Models.Pieces
             LastMoved = moveNumber;
         }
 
+        public override string ToString()
+        {
+            return Position.ToString();
+        }
+
         public override bool Equals(object other)
         {
             if (!(other is Piece otherPiece))
